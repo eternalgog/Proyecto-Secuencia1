@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citas - PsicoVida</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+    <div class="w3-container">
+        <h2 class="w3-text-blue">Citas existentes</h2>
+        <div class="w3-panel w3-cyan w3-padding-16">
+            Listado de citas
+        </div>
+        <table class="w3-table-all">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Cliente</th>
+                    <th>Motivo</th>
+                    <th>Psicólogo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tbl_datos">
+                <!-- Aquí se llenará dinámicamente con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        // Función para cargar citas y configurar botones de eliminar
+        function cargarCitas() {
+            fetchCitas();
+
+            function fetchCitas() {
+                fetch('php/leer-citas.php')
+                .then(response => {
+                    if(response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Error en la solicitud');
+                    }
+                })
+                .then(function(datosjson) {
+                    let s = "";
+                    datosjson.forEach(element => {
+                        s += `
+                            <tr>
+                                <td>${element.id}</td>
+                                <td>${element.fecha}</td>
+                                <td>${element.hora}</td>
+                                <td>${element.paciente}</td>
+                                <td>${element.motivo}</td>
+                                <td>${element.psicologo}</td>
+                                <td><button data-id="${element.id}" class="eliminar-btn w3-button w3-red">Eliminar</button></td>
+                            </tr>
+                        `;
+                    });
+                    document.querySelector("#tbl_datos").innerHTML = s;
+
+                    // Configurar eventos de clic para los botones de eliminar
+                    document.querySelectorAll('.eliminar-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            eliminarCita(this.dataset.id);
+                        });
+                    });
+                })
+                .catch(function(error) {
+                    console.log('Fetch Error:', error);
+                });
+            }
+
+            // Función para eliminar cita
+            function eliminarCita(idCita) {
+                if(confirm("¿Estás seguro de que deseas eliminar esta cita?")) {
+                    fetch('php/eliminar-cita.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ id: idCita }),
+                    })
+                    .then(response => {
+                        if(response.ok) {
+                            // Recargar la lista de citas después de eliminar
+                            fetchCitas();
+                            return response.json();
+                        } else {
+                            throw new Error('Error en la solicitud');
+                        }
+                    })
+                    .then(data => {
+                        console.log('Cita eliminada:', data);
+                    })
+                    .catch(function(error) {
+                        console.log('Fetch Error:', error);
+                    });
+                }
+            }
+        }
+
+        // Llamar a la función cargarCitas cuando se cargue la página
+        document.addEventListener("DOMContentLoaded", function() {
+            cargarCitas();
+        });
+    </script>
+</body>
+</html>

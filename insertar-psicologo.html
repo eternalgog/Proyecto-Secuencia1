@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insertar Psicólogo - PsicoVida</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+    <div class="w3-container">
+        <h2 class="w3-text-purple">Insertar nuevo psicólogo</h2>
+        <form action="php/insertar-psicologo.php" method="POST" class="w3-container">
+            <label for="nombre" class="w3-text-purple">Nombre del psicólogo:</label><br>
+            <input type="text" id="nombre" name="nombre" class="w3-input w3-border" required><br>
+            <label for="enfoque" class="w3-text-purple">Enfoque:</label><br>
+            <select id="enfoque" name="enfoque" class="w3-select w3-border" required>
+                <option value="" disabled selected>Selecciona un enfoque</option>
+                <option value="Individual">Individual</option>
+                <option value="Pareja">Pareja</option>
+                <option value="Familiar">Familiar</option>
+                <option value="Infantil">Infantil</option>
+            </select><br> <br>
+            <label for="telefono" class="w3-text-purple">Teléfono:</label><br>
+            <input type="text" id="telefono" name="telefono" class="w3-input w3-border" required><br>
+            <label for="correo" class="w3-text-purple">Correo electrónico:</label><br>
+            <input type="email" id="correo" name="correo" class="w3-input w3-border" required><br>
+            <label for="rfc" class="w3-text-purple">RFC:</label><br>
+            <input type="text" id="rfc" name="rfc" class="w3-input w3-border" required><br><br>
+            <button type="submit" class="w3-button w3-purple">Enviar</button>
+        </form>
+    </div>
+</body>
+</html>

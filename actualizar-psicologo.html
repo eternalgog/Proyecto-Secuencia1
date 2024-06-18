@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Psicólogo - PsicoVida</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+    <div class="w3-container">
+        <h2 class="w3-text-purple">Actualizar Psicólogo</h2>
+        <form class="w3-container w3-card-4">
+            <input type="hidden" id="id" name="id">
+            <p>
+                <label for="nombre">Nombre</label>
+                <input class="w3-input" type="text" id="nombre" name="nombre" required>
+            </p>
+            <p>
+                <label for="enfoque">Enfoque</label>
+                <input class="w3-input" type="text" id="enfoque" name="enfoque" required>
+            </p>
+            <p>
+                <label for="telefono">Teléfono</label>
+                <input class="w3-input" type="text" id="telefono" name="telefono" required>
+            </p>
+            <p>
+                <label for="correo">Correo Electrónico</label>
+                <input class="w3-input" type="email" id="correo" name="correo" required>
+            </p>
+            <p>
+                <label for="rfc">RFC</label>
+                <input class="w3-input" type="text" id="rfc" name="rfc" required>
+            </p>
+            <p>
+                <button class="w3-button w3-blue" type="submit">Actualizar</button>
+            </p>
+        </form>
+    </div>
+    <script>
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+
+            if (id) {
+                fetch(`php/obtener-psicologo.php?id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('id').value = data.id;
+                    document.getElementById('nombre').value = data.nombre;
+                    document.getElementById('enfoque').value = data.enfoque;
+                    document.getElementById('telefono').value = data.telefono;
+                    document.getElementById('correo').value = data.correo;
+                    document.getElementById('rfc').value = data.rfc;
+                })
+                .catch(error => console.log('Error:', error));
+            }
+
+            document.querySelector('form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                fetch('php/actualizar-psicologo.php', {
+                    method: 'POST',
+                    body: JSON.stringify(Object.fromEntries(formData))
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Psicólogo actualizado exitosamente');
+                    window.location.href = 'index.html';
+                })
+                .catch(error => console.log('Error:', error));
+            });
+        }
+    </script>
+</body>
+</html>

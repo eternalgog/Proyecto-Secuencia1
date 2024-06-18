@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psicólogos - PsicoVida</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+    <div class="w3-container">
+        <h2 class="w3-text-purple">Psicólogos existentes</h2>
+        <div class="w3-panel w3-cyan w3-padding-16">
+            Listado de psicólogos
+        </div>
+        <table class="w3-table-all">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Enfoque</th>
+                    <th>Teléfono</th>
+                    <th>Correo electrónico</th>
+                    <th>RFC</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tbl_psicologos">
+                <!-- Aquí se llenará dinámicamente con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        window.onload = function() {
+            cargarPsicologos();
+
+            function cargarPsicologos() {
+                fetch('php/leer-psicologos.php')
+                .then(response => {
+                    if(response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Error en la solicitud');
+                    }
+                })
+                .then(function(datosjson) {
+                    let s = "";
+                    datosjson.forEach(element => {
+                        s += `
+                            <tr>
+                                <td>${element.id}</td>
+                                <td>${element.nombre}</td>
+                                <td>${element.enfoque}</td>
+                                <td>${element.telefono}</td>
+                                <td>${element.correo}</td>
+                                <td>${element.rfc}</td>
+                                <td>
+                                    <button data-id="${element.id}" class="actualizar-btn w3-button w3-blue">Actualizar</button>
+                                    <button data-id="${element.id}" class="eliminar-btn w3-button w3-red">Eliminar</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    document.querySelector("#tbl_psicologos").innerHTML = s;
+
+                    // Configurar eventos de clic para los botones de actualizar
+                    document.querySelectorAll('.actualizar-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            window.location.href = `actualizar-psicologo.html?id=${this.dataset.id}`;
+                        });
+                    });
+
+                    // Configurar eventos de clic para los botones de eliminar
+                    document.querySelectorAll('.eliminar-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            eliminarPsicologo(this.dataset.id);
+                        });
+                    });
+                })
+                .catch(function(error) {
+                    console.log('Fetch Error:', error);
+                });
+            }
+
+            // Función para eliminar psicólogo
+            function eliminarPsicologo(idPsicologo) {
+                if(confirm("¿Estás seguro de que deseas eliminar este psicólogo?")) {
+                    fetch('php/eliminar-psicologo.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ id: idPsicologo }),
+                    })
+                    .then(response => {
+                        if(response.ok) {
+                            // Recargar la lista de psicólogos después de eliminar
+                            cargarPsicologos();
+                            return response.json();
+                        } else {
+                            throw new Error('Error en la solicitud');
+                        }
+                    })
+                    .then(data => {
+                        console.log('Psicólogo eliminado:', data);
+                    })
+                    .catch(function(error) {
+                        console.log('Fetch Error:', error);
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

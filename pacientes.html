@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pacientes - PsicoVida</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+    <div class="w3-container">
+        <h2 class="w3-text-green">Pacientes existentes</h2>
+        <div class="w3-panel w3-cyan w3-padding-16">
+            Listado de pacientes
+        </div>
+        <table class="w3-table-all">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Correo electrónico</th>
+                    <th>Edad</th>
+                    <th>Género</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tbl_pacientes">
+                <!-- Aquí se llenará dinámicamente con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        window.onload = function() {
+            cargarPacientes();
+
+            function cargarPacientes() {
+                fetch('php/leer-pacientes.php')
+                .then(response => {
+                    if(response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Error en la solicitud');
+                    }
+                })
+                .then(function(datosjson) {
+                    let s = "";
+                    datosjson.forEach(element => {
+                        s += `
+                            <tr>
+                                <td>${element.id}</td>
+                                <td>${element.nombre}</td>
+                                <td>${element.telefono}</td>
+                                <td>${element.direccion}</td>
+                                <td>${element.email}</td>
+                                <td>${element.edad}</td>
+                                <td>${element.genero}</td>
+                                <td>
+                                    <button data-id="${element.id}" class="actualizar-btn w3-button w3-blue">Actualizar</button>
+                                    <button data-id="${element.id}" class="eliminar-btn w3-button w3-red">Eliminar</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    document.querySelector("#tbl_pacientes").innerHTML = s;
+
+                    // Configurar eventos de clic para los botones de actualizar
+                    document.querySelectorAll('.actualizar-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            window.location.href = `actualizar-paciente.html?id=${this.dataset.id}`;
+                        });
+                    });
+
+                    // Configurar eventos de clic para los botones de eliminar
+                    document.querySelectorAll('.eliminar-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            eliminarPaciente(this.dataset.id);
+                        });
+                    });
+                })
+                .catch(function(error) {
+                    console.log('Fetch Error:', error);
+                });
+            }
+
+            // Función para eliminar paciente
+            function eliminarPaciente(idPaciente) {
+                if(confirm("¿Estás seguro de que deseas eliminar este paciente?")) {
+                    fetch('php/eliminar-paciente.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ id: idPaciente }),
+                    })
+                    .then(response => {
+                        if(response.ok) {
+                            // Recargar la lista de pacientes después de eliminar
+                            cargarPacientes();
+                            return response.json();
+                        } else {
+                            throw new Error('Error en la solicitud');
+                        }
+                    })
+                    .then(data => {
+                        console.log('Paciente eliminado:', data);
+                    })
+                    .catch(function(error) {
+                        console.log('Fetch Error:', error);
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - PsicoVida</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f1f1f1;
+            overflow: hidden;
+            padding: 10px 20px;
+        }
+        .navbar-logo img {
+            max-width: 100px;
+            height: auto;
+        }
+        .navbar-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .navbar-links a {
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            color: black;
+            font-size: 16px;
+        }
+        .navbar-links a:hover {
+            background-color: #333;
+            color: white;
+        }
+        .welcome-section {
+            text-align: center;
+            margin: 20px;
+        }
+        .welcome-section h1 {
+            color: #009688; /* Teal text color */
+            font-size: 50px;
+        }
+        .welcome-section p {
+            color: #757575; /* Grey text color */
+            font-size: 20px;
+            margin-top: 20px;
+            max-width: 600px;
+            margin: auto;
+            padding: 10px;
+            box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="w3-container">
+        <div class="navbar w3-bar">
+            <div class="navbar-logo">
+                <img src="images.png" alt="Logo" class="w3-image">
+            </div>
+            <div class="navbar-links">
+                <a href="insertar-paciente.html" class="w3-button w3-black">Alta paciente</a>
+                <a href="insertar-psicologo.html" class="w3-button w3-black">Alta psicólogos</a>
+                <a href="insertar-cita-form.php" class="w3-button w3-black">Alta citas</a>
+                <a href="psicologos.html" class="w3-button w3-black">Mostrar psicólogos</a>
+                <a href="pacientes.html" class="w3-button w3-black">Mostrar pacientes</a>
+                <a href="citas.html" class="w3-button w3-black">Mostrar citas</a>
+            </div>
+        </div>
+        <div class="welcome-section">
+            <h1 class="w3-text-teal">¡Bienvenido a PsicoVida!</h1>
+            <p class="w3-text-grey w3-padding">PsicoVida es una plataforma diseñada para gestionar eficientemente las citas en la clínica, dar de altas psicólogos y pacientes para tener un control de los datos. ¡Para poder hacer citas, es necesario tener psicólogos y pacientes!</p>
+        </div>
+    </div>
+</body>
+</html>
